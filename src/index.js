@@ -31,7 +31,9 @@ function onSearchInput(e) {
       if (countries.length >= 2 && countries.length < 10) {
         renderCountryListItems(countries);
 
-        clearInnerContent(ref.countryInfoBox);
+        if (ref.countryInfoBox.children.length) {
+          clearInnerContent(ref.countryInfoBox);
+        }
 
         return;
       }
