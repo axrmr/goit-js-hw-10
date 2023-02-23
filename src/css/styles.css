@@ -45,13 +45,9 @@ body {
 }
 
 .country-name-lg {
-  font-size: 30px;
+  font-size: 35px;
 }
 
 .country-info {
   font-size: 18px;
-}
-
-.country-text + .country-text {
-  margin-top: 5px;
 }
