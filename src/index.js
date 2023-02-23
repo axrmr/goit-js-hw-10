@@ -16,24 +16,27 @@ function onSearchInput(e) {
   const trimmedSearchInputVal = this.value.trim();
 
   if (!trimmedSearchInputVal) {
+    clearInnerContent(ref.countryInfoBox);
+    clearInnerContent(ref.countryList);
+
     return;
   }
 
   fetchCountries(trimmedSearchInputVal)
     .then(countries => {
       if (countries.length === 1) {
-        renderCountryListItems(countries);
-        renderCountryInfo(countries);
+        ref.countryList.innerHTML = countries.map(getCountryItemTpl);
+
+        ref.countryInfoBox.innerHTML = getCountryInfoTpl(countries);
+
+        const countryNameEl = document.querySelector('.country-name');
+        countryNameEl.classList.add('country-name-lg');
 
         return;
       }
 
       if (countries.length >= 2 && countries.length < 10) {
-        renderCountryListItems(countries);
-
-        if (ref.countryInfoBox.children.length) {
-          clearInnerContent(ref.countryInfoBox);
-        }
+        ref.countryList.innerHTML = countries.map(getCountryItemTpl).join('');
 
         return;
       }
@@ -51,7 +54,7 @@ function onSearchInput(e) {
     });
 }
 
-function createCountryItemMarkup(country) {
+function getCountryItemTpl(country) {
   return `
         <li class="country-item">
           <img class="country-flags" src=${country.flags.svg}  >
@@ -59,7 +62,7 @@ function createCountryItemMarkup(country) {
         </li>`;
 }
 
-function createCountryInfoMarkup(country) {
+function getCountryInfoTpl(country) {
   const { capital, population, languages } = country[0];
 
   return `
@@ -68,12 +71,4 @@ function createCountryInfoMarkup(country) {
       <div class="country-info"><b>Languages:</b> ${Object.values(
         languages
       )}</div>`;
-}
-
-function renderCountryListItems(countries) {
-  ref.countryList.innerHTML = countries.map(createCountryItemMarkup).join('');
-}
-
-function renderCountryInfo(country = []) {
-  ref.countryInfoBox.innerHTML = createCountryInfoMarkup(country);
 }
