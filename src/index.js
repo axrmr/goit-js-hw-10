@@ -41,7 +41,9 @@ function onSearchInput(e) {
         ref.countryInfoBox.children.length &&
           clearInnerContent(ref.countryInfoBox);
 
-        ref.countryList.innerHTML = arr.map(createCountryItemTpl).join('');
+        ref.countryList.innerHTML = countries
+          .map(createCountryItemTpl)
+          .join('');
 
         return;
       }
