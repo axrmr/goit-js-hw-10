@@ -16,8 +16,8 @@ function onSearchInput(e) {
   const trimmedSearchInputVal = this.value.trim();
 
   if (!trimmedSearchInputVal) {
-    clearInnerContent(ref.countryInfoBox);
-    clearInnerContent(ref.countryList);
+    ref.countryInfoBox.children.length && clearInnerContent(ref.countryInfoBox);
+    ref.countryList.children.length && clearInnerContent(ref.countryList);
 
     return;
   }
@@ -25,9 +25,11 @@ function onSearchInput(e) {
   fetchCountries(trimmedSearchInputVal)
     .then(countries => {
       if (countries.length === 1) {
-        ref.countryList.innerHTML = countries.map(getCountryItemTpl);
+        ref.countryList.innerHTML = countries
+          .map(createCountryItemTpl)
+          .join('');
 
-        ref.countryInfoBox.innerHTML = getCountryInfoTpl(countries);
+        ref.countryInfoBox.innerHTML = createCountryInfoTpl(countries);
 
         const countryNameEl = document.querySelector('.country-name');
         countryNameEl.classList.add('country-name-lg');
@@ -36,7 +38,10 @@ function onSearchInput(e) {
       }
 
       if (countries.length >= 2 && countries.length < 10) {
-        ref.countryList.innerHTML = countries.map(getCountryItemTpl).join('');
+        ref.countryInfoBox.children.length &&
+          clearInnerContent(ref.countryInfoBox);
+
+        ref.countryList.innerHTML = arr.map(createCountryItemTpl).join('');
 
         return;
       }
@@ -54,7 +59,7 @@ function onSearchInput(e) {
     });
 }
 
-function getCountryItemTpl(country) {
+function createCountryItemTpl(country) {
   return `
         <li class="country-item">
           <img class="country-flags" src=${country.flags.svg}  >
@@ -62,7 +67,7 @@ function getCountryItemTpl(country) {
         </li>`;
 }
 
-function getCountryInfoTpl(country) {
+function createCountryInfoTpl(country) {
   const { capital, population, languages } = country[0];
 
   return `
